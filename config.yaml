@@ -1,0 +1,21 @@
+models:
+  - name: Product
+    fields:
+      name:
+        type: string
+      price:
+        type: number
+      category:
+        ref: Category
+    options:
+      pagination: true
+      search:
+        - name
+        - price
+
+  - name: Category
+    fields:
+      name:
+        type: string
+    options:
+      pagination: false
