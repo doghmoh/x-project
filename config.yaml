@@ -17,5 +17,33 @@ models:
     fields:
       name:
         type: string
+      icon:
+        type: string
     options:
       pagination: false
+
+  - name: Store
+    fields:
+      name:
+        type: string
+      address:
+        type: string
+      logo:
+        type: string
+      email:
+        type: string
+      phone:
+        type: string
+      description:
+        type: string
+      mapsLink:
+        type: string
+
+  - name: Operator
+    fields:
+      username:
+        type: string
+      role:
+        type: string
+      password:
+        type: string

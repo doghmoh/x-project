@@ -150,8 +150,6 @@ ${validatorRules}
   // Overwrite route file
   fs.writeFileSync(`routes/v1/${modelVar}Routes.js`, routeContent);
 
-  // Overwrite or create route index file
-  fs.writeFileSync(indexPath, indexContent);
 
   // ==== UPDATE INDEX.JS ====
   const indexPath = "routes/v1/index.js";

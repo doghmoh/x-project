@@ -1,5 +1,5 @@
 
-const Category = require('../models/Category');
+const Store = require('../models/Store');
 const { validationResult } = require('express-validator');
 
 exports.create = async (req, res, next) => {
@@ -8,14 +8,14 @@ exports.create = async (req, res, next) => {
     return res.status(422).json({ errors: errors.array() });
   }
   try {
-    const allowedFields = ["name","icon"];
+    const allowedFields = ["name","address","logo","email","phone","description","mapsLink"];
     const data = {};
     allowedFields.forEach((key) => {
       if (req.body[key] !== undefined) {
         data[key] = req.body[key];
       }
     });
-    const doc = await Category.create(data);
+    const doc = await Store.create(data);
     res.status(201).json(doc);
   } catch (err) {
     next(err);
@@ -31,7 +31,7 @@ exports.getAll = async (req, res, next) => {
     }
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const data = await Category.find(query)
+    const data = await Store.find(query)
       .skip((page - 1) * limit)
       .limit(limit);
 
