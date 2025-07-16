@@ -40,3 +40,33 @@ exports.getAll = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getOne = async (req, res, next) => {
+  try {
+    const doc = await Operator.findById(req.params.id);
+    res.json(doc);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.update = async (req, res, next) => {
+  try {
+    const doc = await Operator.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.json(doc);
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.delete = async (req, res, next) => {
+  try {
+    const doc = await Operator.findByIdAndDelete(req.params.id);
+    res.json(doc);
+  } catch (err) {
+    next(err);
+  }
+};
+

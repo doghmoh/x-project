@@ -5,8 +5,18 @@ models:
         type: string
       price:
         type: number
+      cost_price:
+        type: number
+      stock_quantity:
+        type: number
+      low_stock_threshold:
+        type: number
       category:
         ref: Category
+      supplier:
+        ref: Supplier
+      description:
+        type: text
     options:
       pagination: true
       search:
@@ -17,26 +27,33 @@ models:
     fields:
       name:
         type: string
-      icon:
-        type: string
+      description:
+        type: text
     options:
       pagination: false
 
-  - name: Store
+  - name: Supplier
     fields:
       name:
         type: string
-      address:
-        type: string
-      logo:
+      phone:
         type: string
       email:
         type: string
+      country:
+        type: string
+      address:
+        type: string
+
+  - name: Customer
+    fields:
+      name:
+        type: string
       phone:
         type: string
-      description:
+      email:
         type: string
-      mapsLink:
+      address:
         type: string
 
   - name: Operator
@@ -44,6 +61,37 @@ models:
       username:
         type: string
       role:
-        type: string
+        type: enum
+        values:
+          - admin
+          - staff
       password:
         type: string
+
+  - name: StockIn
+    fields:
+      product:
+        ref: Product
+      supplier:
+        ref: Supplier
+      quantity:
+        type: number
+      cost_price:
+        type: number
+      date:
+        type: date
+      note:
+        type: text
+
+  - name: StockOut
+    fields:
+      product:
+        ref: Product
+      customer:
+        ref: Customer
+      quantity:
+        type: number
+      price:
+        type: number
+      date:
+        type: date

@@ -1,5 +1,5 @@
 
-const Product = require('../models/Product');
+const Customer = require('../models/Customer');
 const { validationResult } = require('express-validator');
 
 exports.create = async (req, res, next) => {
@@ -8,14 +8,14 @@ exports.create = async (req, res, next) => {
     return res.status(422).json({ errors: errors.array() });
   }
   try {
-    const allowedFields = ["name","price","cost_price","stock_quantity","low_stock_threshold","category","supplier","description"];
+    const allowedFields = ["name","phone","email","address"];
     const data = {};
     allowedFields.forEach((key) => {
       if (req.body[key] !== undefined) {
         data[key] = req.body[key];
       }
     });
-    const doc = await Product.create(data);
+    const doc = await Customer.create(data);
     res.status(201).json(doc);
   } catch (err) {
     next(err);
@@ -27,11 +27,11 @@ exports.getAll = async (req, res, next) => {
     const query = {};
     if (req.query.q) {
       const regex = new RegExp(req.query.q, 'i');
-      query.$or = [{ name: regex }, { price: regex }];
+      query.$or = [];
     }
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const data = await Product.find(query)
+    const data = await Customer.find(query)
       .skip((page - 1) * limit)
       .limit(limit);
 
@@ -41,9 +41,10 @@ exports.getAll = async (req, res, next) => {
   }
 };
 
+
 exports.getOne = async (req, res, next) => {
   try {
-    const doc = await Product.findById(req.params.id);
+    const doc = await Customer.findById(req.params.id);
     res.json(doc);
   } catch (err) {
     next(err);
@@ -52,7 +53,7 @@ exports.getOne = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    const doc = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    const doc = await Customer.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
     res.json(doc);
@@ -63,7 +64,7 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    const doc = await Product.findByIdAndDelete(req.params.id);
+    const doc = await Customer.findByIdAndDelete(req.params.id);
     res.json(doc);
   } catch (err) {
     next(err);

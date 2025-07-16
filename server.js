@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const errorHandler = require("./middleware/errorHandler");
 const myrouter = require("./routes/v1");
+const { apiKeyAuth } = require("./middleware/apiKeyAuth");
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ app.use(helmet());
 app.get("/", (req, res) => res.send("API running..."));
 
 // Routes
-app.use('/api/v1', myrouter);
+app.use("/api/v1", apiKeyAuth, myrouter);
 
 // Error handler
 app.use(errorHandler);
