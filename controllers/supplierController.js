@@ -9,7 +9,7 @@ exports.create = async (req, res, next) => {
   }
 
   try {
-    const allowedFields = ["name", "phone", "email", "country", "address"];
+    const allowedFields = ["name", "phone", "email", "country"];
     const data = {};
     allowedFields.forEach((key) => {
       if (req.body[key] !== undefined) {

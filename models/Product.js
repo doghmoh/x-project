@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   name: { type: String },
+  sku: { type: String, unique: true },
   price: { type: Number },
   cost_price: { type: Number },
   stock_quantity: { type: Number },

@@ -8,7 +8,7 @@ exports.create = async (req, res, next) => {
     return res.status(422).json({ errors: errors.array() });
   }
   try {
-    const allowedFields = ["name","phone","email","address"];
+    const allowedFields = ["name","phone","email","address", "registre", "nif", "art"];
     const data = {};
     allowedFields.forEach((key) => {
       if (req.body[key] !== undefined) {
@@ -35,7 +35,12 @@ exports.getAll = async (req, res, next) => {
       .skip((page - 1) * limit)
       .limit(limit);
 
-    res.json(data);
+    res.json({
+      total: await Customer.countDocuments(query),
+      page,
+      limit,
+      data
+    });
   } catch (err) {
     next(err);
   }

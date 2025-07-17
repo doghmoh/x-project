@@ -1,6 +1,5 @@
-
-const Product = require('../models/Product');
-const { validationResult } = require('express-validator');
+const Product = require("../models/Product");
+const { validationResult } = require("express-validator");
 
 exports.create = async (req, res, next) => {
   const errors = validationResult(req);
@@ -8,7 +7,17 @@ exports.create = async (req, res, next) => {
     return res.status(422).json({ errors: errors.array() });
   }
   try {
-    const allowedFields = ["name","price","cost_price","stock_quantity","low_stock_threshold","category","supplier","description"];
+    const allowedFields = [
+      "name",
+      "price",
+      "sku",
+      "cost_price",
+      "stock_quantity",
+      "low_stock_threshold",
+      "category",
+      "supplier",
+      "description",
+    ];
     const data = {};
     allowedFields.forEach((key) => {
       if (req.body[key] !== undefined) {
@@ -26,12 +35,13 @@ exports.getAll = async (req, res, next) => {
   try {
     const query = {};
     if (req.query.q) {
-      const regex = new RegExp(req.query.q, 'i');
+      const regex = new RegExp(req.query.q, "i");
       query.$or = [{ name: regex }, { price: regex }];
     }
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const data = await Product.find(query)
+      .populate("category supplier")
       .skip((page - 1) * limit)
       .limit(limit);
 

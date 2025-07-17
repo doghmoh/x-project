@@ -7,10 +7,6 @@ const stockoutSchema = new mongoose.Schema(
       ref: "Customer",
       required: true,
     },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
     products: [
       {
         product: {
