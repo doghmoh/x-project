@@ -6,6 +6,7 @@ const supplierRoutes = require("./supplierRoutes");
 const operatorRoutes = require("./operatorRoutes");
 const categoryRoutes = require("./categoryRoutes");
 const authRotutes = require("./authRoutes");
+const statsRoutes = require("./statsRoutes");
 const { isAuthenticated } = require("../../middleware/apiKeyAuth");
 const router = require("express").Router();
 
@@ -17,4 +18,5 @@ router.use("/customer", isAuthenticated, customerRoutes);
 router.use("/supplier", isAuthenticated, supplierRoutes);
 router.use("/operator", isAuthenticated, operatorRoutes);
 router.use("/category", isAuthenticated, categoryRoutes);
+router.use("/stats", isAuthenticated, statsRoutes);
 module.exports = router;

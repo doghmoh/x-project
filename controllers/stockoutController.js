@@ -110,7 +110,9 @@ exports.getAll = async (req, res, next) => {
 
 exports.getOne = async (req, res, next) => {
   try {
-    const doc = await StockOut.findById(req.params.id);
+    const doc = await StockOut.findById(req.params.id).populate(
+      "products.product customer"
+    );
     res.json(doc);
   } catch (err) {
     next(err);
