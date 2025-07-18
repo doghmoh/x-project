@@ -45,7 +45,12 @@ exports.getAll = async (req, res, next) => {
       .skip((page - 1) * limit)
       .limit(limit);
 
-    res.json(data);
+    res.json({
+      total: await Product.countDocuments(query),
+      page,
+      limit,
+      data,
+    });
   } catch (err) {
     next(err);
   }

@@ -6,13 +6,6 @@ const stockinSchema = new mongoose.Schema({
     ref: 'Supplier',
     required: true
   },
-  date: {
-    type: Date,
-    default: Date.now
-  },
-  note: {
-    type: String
-  },
   products: [
     {
       product: {

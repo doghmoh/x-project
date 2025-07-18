@@ -5,14 +5,6 @@ exports.createStockInValidator = [
     .notEmpty()
     .withMessage("Supplier reference is required"),
 
-  body("date")
-    .notEmpty()
-    .withMessage("Date is required"),
-
-  body("note")
-    .notEmpty()
-    .withMessage("Note is required"),
-
   body("products")
     .isArray({ min: 1 })
     .withMessage("Products must be a non-empty array"),

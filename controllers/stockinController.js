@@ -92,7 +92,7 @@ exports.getAll = async (req, res, next) => {
 
     const [data, total] = await Promise.all([
       StockIn.find(query)
-        .populate("supplier")
+        .populate("supplier products.product")
         .skip(skip)
         .limit(limit)
         .sort({ createdAt: -1 }),
@@ -113,7 +113,9 @@ exports.getAll = async (req, res, next) => {
 };
 exports.getOne = async (req, res, next) => {
   try {
-    const doc = await StockIn.findById(req.params.id);
+    const doc = await StockIn.findById(req.params.id).populate(
+      "supplier products.product"
+    );
     res.json(doc);
   } catch (err) {
     next(err);
