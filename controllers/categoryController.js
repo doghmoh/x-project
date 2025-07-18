@@ -1,6 +1,5 @@
-
-const Category = require('../models/Category');
-const { validationResult } = require('express-validator');
+const Category = require("../models/Category");
+const { validationResult } = require("express-validator");
 
 exports.create = async (req, res, next) => {
   const errors = validationResult(req);
@@ -8,7 +7,7 @@ exports.create = async (req, res, next) => {
     return res.status(422).json({ errors: errors.array() });
   }
   try {
-    const allowedFields = ["name","description"];
+    const allowedFields = ["name", "description"];
     const data = {};
     allowedFields.forEach((key) => {
       if (req.body[key] !== undefined) {
@@ -26,7 +25,7 @@ exports.getAll = async (req, res, next) => {
   try {
     const query = {};
     if (req.query.q) {
-      const regex = new RegExp(req.query.q, 'i');
+      const regex = new RegExp(req.query.q, "i");
       query.$or = [];
     }
     const page = parseInt(req.query.page) || 1;
@@ -35,7 +34,12 @@ exports.getAll = async (req, res, next) => {
       .skip((page - 1) * limit)
       .limit(limit);
 
-    res.json(data);
+    res.json({
+      total: await Category.countDocuments(query),
+      page,
+      limit,
+      data,
+    });
   } catch (err) {
     next(err);
   }

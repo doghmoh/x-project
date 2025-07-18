@@ -97,12 +97,18 @@ exports.getAll = async (req, res, next) => {
     }
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const total = await StockOut.countDocuments(query);
     const data = await StockOut.find(query)
       .populate("products.product customer")
       .skip((page - 1) * limit)
       .limit(limit);
 
-    res.json(data);
+    res.json({
+      total: await StockOut.countDocuments(query),
+      page,
+      limit,
+      data,
+    });
   } catch (err) {
     next(err);
   }

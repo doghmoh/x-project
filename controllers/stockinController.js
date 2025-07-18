@@ -101,10 +101,9 @@ exports.getAll = async (req, res, next) => {
     ]);
 
     res.json({
-      success: true,
-      currentPage: page,
-      totalPages: Math.ceil(total / limit),
-      totalItems: total,
+      total: await StockIn.countDocuments(query),
+      page,
+      limit,
       data,
     });
   } catch (err) {
