@@ -163,5 +163,10 @@ exports.exportStockOutsCSV = async (req, res) => {
       updatedAt: stockout.updatedAt,
     }))
   );
+
+    if (!transformed.length) {
+      return res.status(200).json({ empty: true });
+    }
+
   exportToCSV(res, transformed, "stockouts");
 };

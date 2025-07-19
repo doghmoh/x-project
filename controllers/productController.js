@@ -87,24 +87,50 @@ exports.delete = async (req, res, next) => {
   }
 };
 
-// Export Products
 exports.exportProductsCSV = async (req, res) => {
-  const data = await Product.find()
-    .populate("category", "name")
-    .populate("supplier", "name")
-    .lean();
-  const transformed = data.map((p) => ({
-    name: p.name,
-    sku: p.sku,
-    price: p.price,
-    cost_price: p.cost_price,
-    stock_quantity: p.stock_quantity,
-    low_stock_threshold: p.low_stock_threshold,
-    category: p.category?.name || "",
-    supplier: p.supplier?.name || "",
-    description: p.description,
-    createdAt: p.createdAt,
-    updatedAt: p.updatedAt,
-  }));
-  exportToCSV(res, transformed, "products");
+  try {
+    const data = await Product.find()
+      .populate("category", "name")
+      .populate("supplier", "name")
+      .lean();
+
+    const transformed = data.map((p) => ({
+      name: p.name,
+      sku: p.sku,
+      price: p.price,
+      cost_price: p.cost_price,
+      stock_quantity: p.stock_quantity,
+      low_stock_threshold: p.low_stock_threshold,
+      category: p.category?.name || "",
+      supplier: p.supplier?.name || "",
+      description: p.description || "",
+      createdAt: p.createdAt,
+      updatedAt: p.updatedAt,
+    }));
+
+    if (!transformed.length) {
+      return res.status(200).json({ empty: true });
+    }
+
+    // Champs explicitement définis
+    const fields = [
+      "name",
+      "sku",
+      "price",
+      "cost_price",
+      "stock_quantity",
+      "low_stock_threshold",
+      "category",
+      "supplier",
+      "description",
+      "createdAt",
+      "updatedAt",
+    ];
+
+    exportToCSV(res, transformed, "products", fields);
+  } catch (error) {
+    console.error("❌ Export produits échoué:", error);
+    res.status(500).json({ error: "Erreur lors de l'export des produits" });
+    next(error);
+  }
 };

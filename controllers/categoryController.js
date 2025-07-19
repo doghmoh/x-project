@@ -76,5 +76,9 @@ exports.delete = async (req, res, next) => {
 
 exports.exportCategoriesCSV = async (req, res) => {
   const data = await Category.find().lean();
+  if (!data || data.length === 0) {
+    return res.status(200).json({ empty: true });
+  }
+
   exportToCSV(res, data, "categories");
 };

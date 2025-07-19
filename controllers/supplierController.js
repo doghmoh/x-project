@@ -1,6 +1,6 @@
-const Supplier = require('../models/Supplier');
-const { validationResult } = require('express-validator');
-const { exportToCSV } = require('../utils/exportToCsv');
+const Supplier = require("../models/Supplier");
+const { validationResult } = require("express-validator");
+const { exportToCSV } = require("../utils/exportToCsv");
 
 // CREATE
 exports.create = async (req, res, next) => {
@@ -30,12 +30,12 @@ exports.getAll = async (req, res, next) => {
   try {
     const query = {};
     if (req.query.q) {
-      const regex = new RegExp(req.query.q, 'i');
+      const regex = new RegExp(req.query.q, "i");
       query.$or = [
         { name: regex },
         { phone: regex },
         { email: regex },
-        { country: regex }
+        { country: regex },
       ];
     }
 
@@ -52,7 +52,7 @@ exports.getAll = async (req, res, next) => {
       total,
       page,
       limit,
-      data
+      data,
     });
   } catch (err) {
     next(err);
@@ -64,7 +64,7 @@ exports.getOne = async (req, res, next) => {
   try {
     const supplier = await Supplier.findById(req.params.id);
     if (!supplier) {
-      return res.status(404).json({ message: 'Supplier not found' });
+      return res.status(404).json({ message: "Supplier not found" });
     }
     res.json(supplier);
   } catch (err) {
@@ -90,11 +90,11 @@ exports.update = async (req, res, next) => {
 
     const supplier = await Supplier.findByIdAndUpdate(req.params.id, data, {
       new: true,
-      runValidators: true
+      runValidators: true,
     });
 
     if (!supplier) {
-      return res.status(404).json({ message: 'Supplier not found' });
+      return res.status(404).json({ message: "Supplier not found" });
     }
 
     res.json(supplier);
@@ -108,16 +108,19 @@ exports.remove = async (req, res, next) => {
   try {
     const supplier = await Supplier.findByIdAndDelete(req.params.id);
     if (!supplier) {
-      return res.status(404).json({ message: 'Supplier not found' });
+      return res.status(404).json({ message: "Supplier not found" });
     }
-    res.json({ message: 'Supplier deleted successfully' });
+    res.json({ message: "Supplier deleted successfully" });
   } catch (err) {
     next(err);
   }
 };
 
-
 exports.exportSuppliersCSV = async (req, res) => {
   const data = await Supplier.find().lean();
-  exportToCSV(res, data, 'suppliers');
+  if (!data || data.length === 0) {
+    return res.status(200).json({ empty: true });
+  }
+
+  exportToCSV(res, data, "suppliers");
 };

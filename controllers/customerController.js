@@ -1,7 +1,6 @@
-
-const Customer = require('../models/Customer');
-const { validationResult } = require('express-validator');
-const { exportToCSV } = require('../utils/exportToCsv');
+const Customer = require("../models/Customer");
+const { validationResult } = require("express-validator");
+const { exportToCSV } = require("../utils/exportToCsv");
 
 exports.create = async (req, res, next) => {
   const errors = validationResult(req);
@@ -9,7 +8,15 @@ exports.create = async (req, res, next) => {
     return res.status(422).json({ errors: errors.array() });
   }
   try {
-    const allowedFields = ["name","phone","email","address", "registre", "nif", "art"];
+    const allowedFields = [
+      "name",
+      "phone",
+      "email",
+      "address",
+      "registre",
+      "nif",
+      "art",
+    ];
     const data = {};
     allowedFields.forEach((key) => {
       if (req.body[key] !== undefined) {
@@ -27,7 +34,7 @@ exports.getAll = async (req, res, next) => {
   try {
     const query = {};
     if (req.query.q) {
-      const regex = new RegExp(req.query.q, 'i');
+      const regex = new RegExp(req.query.q, "i");
       query.$or = [];
     }
     const page = parseInt(req.query.page) || 1;
@@ -40,13 +47,12 @@ exports.getAll = async (req, res, next) => {
       total: await Customer.countDocuments(query),
       page,
       limit,
-      data
+      data,
     });
   } catch (err) {
     next(err);
   }
 };
-
 
 exports.getOne = async (req, res, next) => {
   try {
@@ -77,9 +83,13 @@ exports.delete = async (req, res, next) => {
   }
 };
 
-
 // Export Customers
 exports.exportCustomersCSV = async (req, res) => {
   const data = await Customer.find().lean();
-  exportToCSV(res, data, 'customers');
+
+  if (!data || data.length === 0) {
+    return res.status(200).json({ empty: true });
+  }
+
+  exportToCSV(res, data, "customers");
 };

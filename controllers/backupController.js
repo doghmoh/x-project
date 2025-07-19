@@ -16,6 +16,14 @@ exports.exportDatabaseAsJson = async (req, res) => {
       stockOuts: await StockOut.find().lean(),
     };
 
+    const isEmpty = Object.values(data).every(
+      (arr) => Array.isArray(arr) && arr.length === 0
+    );
+
+    if (isEmpty) {
+      return res.status(200).json({ empty: true });
+    }
+
     res.setHeader(
       "Content-Disposition",
       'attachment; filename="database-backup.json"'
