@@ -1,6 +1,7 @@
 
 const Customer = require('../models/Customer');
 const { validationResult } = require('express-validator');
+const { exportToCSV } = require('../utils/exportToCsv');
 
 exports.create = async (req, res, next) => {
   const errors = validationResult(req);
@@ -74,4 +75,11 @@ exports.delete = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+
+// Export Customers
+exports.exportCustomersCSV = async (req, res) => {
+  const data = await Customer.find().lean();
+  exportToCSV(res, data, 'customers');
 };

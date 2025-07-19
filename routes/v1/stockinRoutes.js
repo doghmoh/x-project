@@ -4,6 +4,7 @@ const stockinRoutes = express.Router();
 const stockinController = require('../../controllers/stockinController');
 const { createStockInValidator } = require('../../validators/stockinValidator');
 
+stockinRoutes.get("/export", stockinController.exportStockInsCSV);
 stockinRoutes.get('/', stockinController.getAll);
 stockinRoutes.post('/', createStockInValidator, stockinController.create);
 stockinRoutes.get('/:id', stockinController.getOne);

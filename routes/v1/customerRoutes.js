@@ -4,6 +4,7 @@ const customerRoutes = express.Router();
 const customerController = require('../../controllers/customerController');
 const { createCustomerValidator } = require('../../validators/customerValidator');
 
+customerRoutes.get("/export", customerController.exportCustomersCSV); 
 customerRoutes.get('/', customerController.getAll);
 customerRoutes.post('/', createCustomerValidator, customerController.create);
 customerRoutes.get('/:id', customerController.getOne);

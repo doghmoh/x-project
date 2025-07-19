@@ -1,5 +1,7 @@
 const Product = require("../models/Product");
 const { validationResult } = require("express-validator");
+const { Parser } = require("json2csv");
+const { exportToCSV } = require("../utils/exportToCsv");
 
 exports.create = async (req, res, next) => {
   const errors = validationResult(req);
@@ -83,4 +85,26 @@ exports.delete = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+// Export Products
+exports.exportProductsCSV = async (req, res) => {
+  const data = await Product.find()
+    .populate("category", "name")
+    .populate("supplier", "name")
+    .lean();
+  const transformed = data.map((p) => ({
+    name: p.name,
+    sku: p.sku,
+    price: p.price,
+    cost_price: p.cost_price,
+    stock_quantity: p.stock_quantity,
+    low_stock_threshold: p.low_stock_threshold,
+    category: p.category?.name || "",
+    supplier: p.supplier?.name || "",
+    description: p.description,
+    createdAt: p.createdAt,
+    updatedAt: p.updatedAt,
+  }));
+  exportToCSV(res, transformed, "products");
 };

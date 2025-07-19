@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const mongoose = require("mongoose");
 const StockOut = require("../models/StockOut");
 const Product = require("../models/Product");
+const { exportToCSV } = require("../utils/exportToCsv");
 
 exports.create = async (req, res, next) => {
   const errors = validationResult(req);
@@ -143,4 +144,24 @@ exports.delete = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+// Export StockOuts
+exports.exportStockOutsCSV = async (req, res) => {
+  const data = await StockOut.find()
+    .populate("customer", "name")
+    .populate("products.product", "name")
+    .lean();
+  const transformed = data.flatMap((stockout) =>
+    stockout.products.map((p) => ({
+      invoice_number: stockout.invoice_number,
+      customer: stockout.customer?.name || "",
+      product: p.product?.name || "",
+      quantity: p.quantity,
+      price: p.price,
+      createdAt: stockout.createdAt,
+      updatedAt: stockout.updatedAt,
+    }))
+  );
+  exportToCSV(res, transformed, "stockouts");
 };
