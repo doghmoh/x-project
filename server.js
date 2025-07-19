@@ -26,7 +26,7 @@ app.use(morgan("dev"));
 app.use(helmet());
 
 // Example route
-app.get("/", (req, res) => res.send("API running..."));
+app.get("/", (req, res) => res.send("API running ..."));
 
 // Routes
 app.use("/api/v1", apiKeyAuth, myrouter);
